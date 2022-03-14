@@ -27,7 +27,7 @@ class ParameterServer(HomoDecisionTreeArbiter):
         self.testworkdir = testworkdir
         self.RESULT_DIR = resultdir
         self.modeldir = modeldir
-        self.test_data = get_test_data()
+        self.test_data, self.test_y = get_test_data()
         #print(self.test_data)
         # self.test_data_loader = get_test_loader()
         self.label_distribution = []
@@ -240,7 +240,10 @@ class ParameterServer(HomoDecisionTreeArbiter):
                     worker.fit_update_y_hat(class_idx, self.learning_rate, epoch_idx)
                     worker.update_feature_importance()
                     # self.tree_list.append(worker.fit_send_tree_list())
-
+            acc = self.get_test_acc(epoch_idx)
+            print("epoch{}:acc{}".format(epoch_idx, acc))
+            with open(os.path.join(self.RESULT_DIR, 'test_acc.txt'), 'a') as fout:
+                fout.writelines("{},{}".format(epoch_idx, acc))
             # loss compute
             # local_loss = self.compute_loss(self.y_hat, self.y)
             # self.aggregator.send_local_loss(local_loss, self.data_bin.count(), suffix=(epoch_idx,))
@@ -249,3 +252,18 @@ class ParameterServer(HomoDecisionTreeArbiter):
 
     def predict_data(self, data):
         return self.workers[0].predict(data, self.learning_rate, self.boosting_round)
+
+    def get_test_acc(self,epoch_idx):
+        loader = torch.utils.data.DataLoader(
+            self.test_data,
+            batch_size=75,
+            shuffle=False,
+        )
+        test_data = []
+        with torch.no_grad():
+            for data in loader:
+                data = np.array(data)
+                test_data.extend(data)
+        test_data = np.array(test_data)
+        return accuracy_score(self.test_y, self.workers[0].predict(test_data.tolist(), self.learning_rate, epoch_idx+1))
+

@@ -30,7 +30,7 @@ class FedAveragingGradsTestSuit(unittest.TestCase):
         self.n_users = 5
 
         self.feature_num = 561
-        self.boosting_round = 10  # 要改
+        self.boosting_round = 50  # 要改
         self.booster_dim = 5  # 要改，原来的dim是14，对应14种标签
         self.bin_num = 16
         self.learning_rate = 1

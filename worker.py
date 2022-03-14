@@ -37,7 +37,7 @@ class Worker(object):
         self.data_bin = x
         self.y = np.array(y)
         self.u = u
-        self.threshold = 0.5 # 阈值
+        self.threshold = 0.6 # 阈值
 
     """
     Boosting Fit

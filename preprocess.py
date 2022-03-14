@@ -62,4 +62,4 @@ def get_user_data(user_idx):
 def get_test_data():
     with open(TESTDATA_PATH, 'rb') as fin:
         data = pickle.load(fin)
-    return data["X"]
+    return data["X"], data['y']
