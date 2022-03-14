@@ -28,7 +28,7 @@ class Worker(object):
         self.valid_features = []
         self.feature_importance = {}
         self.loss_method = None
-        self.y_hat = None
+        self.y_hat = None  # 每个样本对应5个类别的得分
         self.init_score = None
         self.all_g_h = None
         x, y = get_user_data(user_idx=u)
@@ -147,11 +147,11 @@ class Worker(object):
             weights = np.array(weight_list).reshape((-1, self.booster_dim))
             predict = self.loss_method.predict(weights).tolist()
             #predicts.append(np.argmax(predict))
-            predicts.append(np.max(predict))
-            '''if np.argmax(predict) > self.threshold:
+            #predicts.append(np.max(predict))
+            if np.max(predict) > self.threshold:
                 predicts.append(np.argmax(predict))
             else:
-                predicts.append(5)'''
+                predicts.append(5)
 
 
         return predicts

@@ -30,8 +30,8 @@ class FedAveragingGradsTestSuit(unittest.TestCase):
         self.n_users = 5
 
         self.feature_num = 561
-        self.boosting_round = 1
-        self.booster_dim = 6  # 原来的dim是14，对应14种标签
+        self.boosting_round = 10  # 要改
+        self.booster_dim = 5  # 要改，原来的dim是14，对应14种标签
         self.bin_num = 16
         self.learning_rate = 1
         self.max_depth = 5
@@ -53,8 +53,9 @@ class FedAveragingGradsTestSuit(unittest.TestCase):
             self.workers.append(Worker(self.booster_dim, self.bin_num, self.feature_num, u))
 
     def _clear(self):
-        shutil.rmtree(self.testworkdir)
-        shutil.rmtree(self.modeldir)
+        #  shutil.rmtree(self.testworkdir)
+        #  shutil.rmtree(self.modeldir)
+        pass
 
     def tearDown(self):
             self._clear()

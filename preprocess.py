@@ -42,7 +42,7 @@ def get_user_data(user_idx):
 
     # if not fpath.endswith('csv'):
     #     return
-    fpath='train/train/{}.csv'.format(user_idx)
+    fpath='train/train/new_{}.csv'.format(user_idx)
     print('Load User {} Data: '.format(user_idx), os.path.basename(fpath))
     data = pd.read_csv(fpath, skipinitialspace=True, low_memory=False)
     x = extract_features(data)

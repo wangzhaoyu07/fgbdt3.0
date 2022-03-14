@@ -6,7 +6,8 @@ import torch
 import numpy as np
 from homo_decision_tree.homo_decision_tree_arbiter import HomoDecisionTreeArbiter
 from worker import Worker
-from preprocess import get_test_data
+from preprocess import get_test_data, get_user_data
+from sklearn.metrics import accuracy_score
 
 
 class ParameterServer(HomoDecisionTreeArbiter):
@@ -51,7 +52,7 @@ class ParameterServer(HomoDecisionTreeArbiter):
         if isinstance(predition, (np.ndarray,)):
             predition = predition.reshape(-1).tolist()
 
-        with open(os.path.join(self.RESULT_DIR, 'prob_result.txt'), 'w') as fout:
+        with open(os.path.join(self.RESULT_DIR, 'result.txt'), 'w') as fout:
             fout.writelines(os.linesep.join([str(n) for n in predition]))
 
     def save_testdata_prediction(self):
@@ -62,7 +63,9 @@ class ParameterServer(HomoDecisionTreeArbiter):
             predict = []
             for i in range(len(predictions)):
                 predict.append(predictions[i][rid])
-            prediction.append(np.argmax(np.bincount(predict)))
+            #prediction.append(np.argmax(np.bincount(predict)))
+            prediction.append(predict[0])
+
         self.save_prediction(prediction)
 
     def ensemble(self):
@@ -184,8 +187,8 @@ class ParameterServer(HomoDecisionTreeArbiter):
 
             # 对worker的每个booster阶段进行初始化
             for worker in self.workers:
-                if (epoch_idx >= 1):
-                    worker.choose_valid_feature_data()
+                '''if (epoch_idx >= 1):
+                    worker.choose_valid_feature_data()'''
                 worker.fit_booster_init()
             for class_idx in range(self.booster_dim):
                 print('class:{}'.format(class_idx))
